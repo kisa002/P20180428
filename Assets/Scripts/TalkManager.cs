@@ -11,6 +11,8 @@ public class TalkManager : MonoBehaviour
 
 	public int talkIndex = 0;
 
+	public int stageIndex = 0;
+
 	public string talk;
 	public string[] talks;
 
@@ -35,7 +37,7 @@ public class TalkManager : MonoBehaviour
 
 	void Init()
 	{
-		talk = Resources.Load<TextAsset>("Text/Talk2").text;
+		talk = Resources.Load<TextAsset>("Text/Talk3").text;
 		talks = talk.Split('\n');
 
 		for(int i=0; i<talks.Length; i++)
@@ -75,13 +77,19 @@ public class TalkManager : MonoBehaviour
 	
 	public Talk GetTalk()
 	{
-		//Debug.LogError("CURRENT : " + listTalk.FindIndex((Talk talk) => talk._stage == talkStage && talk._index == talkIndex) + " / LAST : " + (listTalk.FindLastIndex((Talk talk) => talk._stage == talkStage)));
 		if(listTalk.FindIndex((Talk talk) => talk._stage == talkStage && talk._index == talkIndex) >= (listTalk.FindLastIndex((Talk talk) => talk._stage == talkStage)))
 		{
-			Talk talk;
-			talk = new Talk{ _name = "END", _content = "END" };
+			if(talkStage == 1)
+			{
+				Talk talk;
+				talk = new Talk{ _name = "END", _content = "END" };
 
-			return talk;
+				return talk;
+			}
+			else
+				UIManager.Instance.panelTalk.SetActive(false);
+
+			return listTalk[listTalk.FindIndex((Talk talk) => talk._stage == talkStage) + talkIndex];
 		}
 
 		return listTalk[listTalk.FindIndex((Talk talk) => talk._stage == talkStage) + talkIndex++];
@@ -98,7 +106,7 @@ public class TalkManager : MonoBehaviour
 	public Talk GetSuccess()
 	{
 		Talk talk;
-		talk = new Talk{ _name = "할머니", _content = "헤에에에" + string.Format("\n") + "기억해 주고있었네에....?"};
+		talk = new Talk{ _name = "할머니", _content = "영감, 고맙구려."};
 
 		return talk;
 	}
@@ -106,7 +114,15 @@ public class TalkManager : MonoBehaviour
 	public Talk GetFailed()
 	{
 		Talk talk;
-		talk = new Talk{ _name = "할머니", _content = "동작 그만, 내가 치매 걸렸다고 밑장 빼기냐" + string.Format("\n") + "내가 빙다리 핫바지로 보이더냐"};
+		talk = new Talk{ _name = "할머니", _content = "이게 아니여 영감."};
+
+		return talk;
+	}
+
+	public Talk GetFailed2()
+	{
+		Talk talk;
+		talk = new Talk{ _name = "할아버지", _content = "그려?"};
 
 		return talk;
 	}
