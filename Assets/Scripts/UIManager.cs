@@ -15,6 +15,8 @@ public class UIManager : MonoBehaviour
 
 	public GameObject buttons;
 
+	bool isTalk = false;
+
 	void Awake()
 	{
 		if(UIManager.Instance == null)
@@ -51,6 +53,7 @@ public class UIManager : MonoBehaviour
 			yield return new WaitForSeconds(0.01f);
 		}
 
+		SetNextTalk();		
 		yield return new WaitForSeconds(1f);		
 
 		for(int i=0; i<100; i++)
@@ -74,10 +77,8 @@ public class UIManager : MonoBehaviour
 			panelStage.color = new Color(1, 1, 1, panelStage.color.a - 0.01f);
 			yield return new WaitForSeconds(0.01f);
 		}
-
+		
 		panelStage.gameObject.SetActive(false);
-
-		SetNextTalk();
 	}
 
 	public void SetSuccessTalk()
@@ -102,7 +103,9 @@ public class UIManager : MonoBehaviour
 
 		if(talk._name == "END")
 		{
+			TalkManager.Instance.talkIndex = 0;					
 			TalkManager.Instance.talkStage ++;
+			
 			StartCoroutine(Fade());
 		}
 		else

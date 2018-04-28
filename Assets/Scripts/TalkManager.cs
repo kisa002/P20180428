@@ -24,9 +24,16 @@ public class TalkManager : MonoBehaviour
 			TalkManager.Instance = this;
 		else
 			Destroy(this.gameObject);
+
+		Init();
 	}
 
 	void Start ()
+	{
+		
+	}
+
+	void Init()
 	{
 		talk = Resources.Load<TextAsset>("Text/Ang").text;
 		talks = talk.Split('\n');
@@ -38,6 +45,7 @@ public class TalkManager : MonoBehaviour
 			
 			int pos;
 			int stage;
+			int index;
 
 			string name;
 			string content;
@@ -47,24 +55,28 @@ public class TalkManager : MonoBehaviour
 			talks[i] = talks[i].Substring(pos + 1, talks[i].Length - pos - 1);
 
 			pos = talks[i].IndexOf(',');
+			index = int.Parse(talks[i].Substring(0, pos));
+			talks[i] = talks[i].Substring(pos + 1, talks[i].Length - pos - 1);
+
+			pos = talks[i].IndexOf(',');
 			name = talks[i].Substring(0, pos);
 			talks[i] = talks[i].Substring(pos + 1, talks[i].Length - pos - 1);
 			
 			content = talks[i].Substring(0, talks[i].Length).Replace("\\n", string.Format("\n"));
 
-			listTalk.Add( new Talk { _stage = stage, _name = name, _content = content });
+			listTalk.Add( new Talk { _stage = stage, _index = index,_name = name, _content = content });
 
 			listTalks[i] = new List<Talk>();
-			listTalks[i].Add( new Talk { _stage = stage, _name = name, _content = content });
+			listTalks[i].Add( new Talk { _stage = stage, _index = index, _name = name, _content = content });
 		}
 
-		UIManager.Instance.SetNextTalk();
+		//UIManager.Instance.SetNextTalk();
 	}
 	
 	public Talk GetTalk()
 	{
-		Debug.LogError("CURRENT : " + listTalk.FindIndex((Talk talk) => talk._stage == talkStage) + talkIndex + " / LAST : " + (listTalk.FindLastIndex((Talk talk) => talk._stage == talkStage) + 1));
-		if(listTalk.FindIndex((Talk talk) => talk._stage == talkStage) + talkIndex == (listTalk.FindLastIndex((Talk talk) => talk._stage == talkStage) + 1))
+		//Debug.LogError("CURRENT : " + listTalk.FindIndex((Talk talk) => talk._stage == talkStage && talk._index == talkIndex) + " / LAST : " + (listTalk.FindLastIndex((Talk talk) => talk._stage == talkStage)));
+		if(listTalk.FindIndex((Talk talk) => talk._stage == talkStage && talk._index == talkIndex) >= (listTalk.FindLastIndex((Talk talk) => talk._stage == talkStage)))
 		{
 			Talk talk;
 			talk = new Talk{ _name = "END", _content = "END" };
