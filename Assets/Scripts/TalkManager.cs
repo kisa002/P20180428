@@ -35,7 +35,7 @@ public class TalkManager : MonoBehaviour
 
 	void Init()
 	{
-		talk = Resources.Load<TextAsset>("Text/Ang").text;
+		talk = Resources.Load<TextAsset>("Text/Talk2").text;
 		talks = talk.Split('\n');
 
 		for(int i=0; i<talks.Length; i++)

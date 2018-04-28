@@ -42,10 +42,10 @@ public class UIManager : MonoBehaviour
 	{
 		panelStage.gameObject.SetActive(true);
 
-		if(TalkManager.Instance.talkStage == 0)
+		if(TalkManager.Instance.talkStage == 1)
 			textStage.text = "프롤로그";
 		else
-			textStage.text = "챕터 " + TalkManager.Instance.talkStage;
+			textStage.text = "챕터 " + (TalkManager.Instance.talkStage - 1);
 
 		for(int i=0; i<100; i++)
 		{

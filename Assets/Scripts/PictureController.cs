@@ -7,6 +7,7 @@ public class PictureController : MonoBehaviour
     //4:3
 	public int type = -1;
     public Vector3 PicturePos;
+    public Quaternion PictureRot;
 
     private Vector3 SelectedPos;
     private Quaternion SelectedRot;
@@ -19,7 +20,7 @@ public class PictureController : MonoBehaviour
 
     private void Awake()
     {
-        SelectedPos = new Vector3(35f, 0f,9f);
+        SelectedPos = new Vector3(35f, 9.9f,4.5f);
         SelectedRot = new Quaternion (90f, 0f, 0f, 1f);
         SelectedRot.eulerAngles = new Vector3(90f, 0f, 0f);
         SelectedScale = new Vector3(4.3f, 4.3f, 1f);
@@ -46,6 +47,8 @@ public class PictureController : MonoBehaviour
         if (PlayerController.instance.bPictureSelected == true)
             return;
         PicturePos = transform.localPosition;
+        PictureRot = transform.localRotation;
+        PlayerController.instance.SelectController=this;
         bZoomming = true;
         StartCoroutine(ZoomIn());
         PlayerController.instance.bPictureSelected = true;
@@ -93,6 +96,7 @@ public class PictureController : MonoBehaviour
         transform.rotation = SelectedRot;
         transform.localScale = SelectedScale;
         bSelected = true;
+        PlayerController.instance.SetBtnEnable(true);
         Debug.Log("선택끝");
         yield return null;
     }
@@ -107,7 +111,7 @@ public class PictureController : MonoBehaviour
         {
             fTIme += Time.deltaTime / 1f;
             transform.localPosition = Vector3.Lerp(transform.localPosition, PicturePos, fTIme);
-            transform.rotation = Quaternion.Lerp(transform.rotation, Q, fTIme);
+            transform.rotation = Quaternion.Lerp(transform.rotation, PictureRot, fTIme);
             transform.localScale = Vector3.Lerp(transform.localScale, V, fTIme);
             if (Vector3.Distance(transform.localPosition, PicturePos) < 1f)
             {
@@ -116,7 +120,7 @@ public class PictureController : MonoBehaviour
             yield return new WaitForEndOfFrame();
         }
         transform.localPosition = PicturePos;
-        transform.rotation = Q;
+        transform.rotation = PictureRot;
         transform.localScale = V;
         PlayerController.instance.bPictureSelected = false;
         bSelected = true;
@@ -125,15 +129,16 @@ public class PictureController : MonoBehaviour
     }
 
 
-    Vector3 Vtemp = new Vector3(35f, 0f, 40f);
+    Vector3 Vtemp = new Vector3(35f, 20f, 40f);
 
     IEnumerator SelectPicture()
     {
-
+        fTIme = 0f;
         Debug.Log("정답");
         while (bZoomming)
         {
-            transform.localPosition = Vector3.Lerp(transform.localPosition, Vtemp, Time.deltaTime * 4f);
+            fTIme += Time.deltaTime / 5f;
+            transform.localPosition = Vector3.Lerp(transform.localPosition, Vtemp, fTIme);
             transform.rotation = Quaternion.Lerp(transform.rotation, Q, Time.deltaTime * 10f);
             //transform.localScale = Vector3.Lerp(transform.localScale, V, Time.deltaTime * 5f);
             if (Vector3.Distance(transform.localPosition, Vtemp) < 1f)
@@ -144,43 +149,65 @@ public class PictureController : MonoBehaviour
         }
         transform.localPosition = Vtemp;
         transform.rotation = Q;
-        transform.localScale = V;
+        //transform.localScale = V;
         PlayerController.instance.bPictureSelected = false;
         bSelected = true;
         Debug.Log("취소 끝");
         yield return null;
     }
 
-
-
-    private void Update()
+    public void CancelBtn()
     {
-
-        //취소 버튼 
-        if(Input.GetKeyDown(KeyCode.Space)&&bSelected)
+        PlayerController.instance.SetBtnEnable(false);
+        bSelected = false;
+        bZoomming = true;
+        StartCoroutine(ZoomOut());
+    }
+    public void SelectBtn()
+    {
+        PlayerController.instance.SetBtnEnable(false);
+        if (PlayerController.instance.sSelectName == FrontSprite.sprite.name)
+        {
+            bSelected = false;
+            bZoomming = true;
+            StartCoroutine(SelectPicture());
+        }
+        else
         {
             bSelected = false;
             bZoomming = true;
             StartCoroutine(ZoomOut());
         }
-        //선택 버튼
-        if(Input.GetKeyDown(KeyCode.Z) && bSelected)
-        {
-            if(PlayerController.instance.sSelectName== FrontSprite.sprite.name)
-            {
-                bSelected = false;
-                bZoomming = true;
-                StartCoroutine(SelectPicture());
-            }
-            else
-            {
-                bSelected = false;
-                bZoomming = true;
-                StartCoroutine(ZoomOut());
-            }
-
-        }
     }
+
+    //private void Update()
+    //{
+
+    //    //취소 버튼 
+    //    if(Input.GetKeyDown(KeyCode.Space)&&bSelected)
+    //    {
+    //        bSelected = false;
+    //        bZoomming = true;
+    //        StartCoroutine(ZoomOut());
+    //    }
+    //    //선택 버튼
+    //    if(Input.GetKeyDown(KeyCode.Z) && bSelected)
+    //    {
+    //        if(PlayerController.instance.sSelectName== FrontSprite.sprite.name)
+    //        {
+    //            bSelected = false;
+    //            bZoomming = true;
+    //            StartCoroutine(SelectPicture());
+    //        }
+    //        else
+    //        {
+    //            bSelected = false;
+    //            bZoomming = true;
+    //            StartCoroutine(ZoomOut());
+    //        }
+
+    //    }
+    //}
 
 
 

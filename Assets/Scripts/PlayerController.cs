@@ -7,12 +7,16 @@ public class PlayerController : MonoBehaviour
     public static PlayerController instance;
     public GameObject PictureObj;
     //public Canvas Canvas;
+    public GameObject UiBtnObj;
+    public PictureController SelectController;
+    public Transform[] StartPos;
 
     public bool bPictureSelected;
     //public string sPictureName;
     private void Awake()
     {
         instance = this;
+        SelectController = new PictureController();
         StartCoroutine(Init());
 
 
@@ -41,34 +45,30 @@ public class PlayerController : MonoBehaviour
     PictureController[]Obj;
 
     public string sSelectName;
-
     public void StartChapter(int nChapter)
     {
         switch (nChapter)
         {
             case 1:
-                //for (int i = 0; i < 5; i++)
-                //{
+                sSelectName = "testf101";
+                for (int i = 0; i < 8; i++)
+                {
 
-                //    Obj[i].transform.position = new Vector3(-30f, 0f, 0f);//
-                //    Obj[i].transform.localScale = new Vector3(1f, 1f, 1f);
-                //    //Obj[i].transform.GetComponent<PictureController>().SetPictureSize(false);
-                //    Obj[i].transform.GetComponent<PictureController>().FrontSprite.sprite = GetSprite("testf001");
-                //    Obj[i].transform.GetComponent<PictureController>().BackSprite.sprite = GetSprite("testb001");
+                    Obj[i].transform.position = StartPos[i].position;
+                    Obj[i].transform.localScale = new Vector3(1f, 1f, 1f);
+                    Obj[i].transform.rotation = StartPos[i].rotation;
+                    //Obj[i].transform.GetComponent<PictureController>().SetPictureSize(false);
+                    Obj[i].transform.GetComponent<PictureController>().FrontSprite.sprite = GetSprite("testf001");
+                    Obj[i].transform.GetComponent<PictureController>().BackSprite.sprite = GetSprite("testb001");
 
-                //}
-                Obj[0].transform.position = new Vector3(-30f, 0f, 0f);//
-                Obj[0].transform.localScale = new Vector3(1f, 1f, 1f);
+                }
+
+                Obj[7].transform.position = StartPos[7].position;
+                Obj[7].transform.localScale = new Vector3(1f, 1f, 1f);
+                Obj[7].transform.rotation = StartPos[7].rotation;
                 //Obj[i].transform.GetComponent<PictureController>().SetPictureSize(false);
-                Obj[0].transform.GetComponent<PictureController>().FrontSprite.sprite = GetSprite("testf001");
-                Obj[0].transform.GetComponent<PictureController>().BackSprite.sprite = GetSprite("testb001");
-
-                Obj[1].transform.position = new Vector3(30f, 0f, 0f);//
-                Obj[1].transform.localScale = new Vector3(1f, 1f, 1f);
-                //Obj[i].transform.GetComponent<PictureController>().SetPictureSize(false);
-                Obj[1].transform.GetComponent<PictureController>().FrontSprite.sprite = GetSprite("testf101");
-                Obj[1].transform.GetComponent<PictureController>().BackSprite.sprite = GetSprite("testb101");
-                sSelectName = "testf001";
+                Obj[7].transform.GetComponent<PictureController>().FrontSprite.sprite = GetSprite("testf101");
+                Obj[7].transform.GetComponent<PictureController>().BackSprite.sprite = GetSprite("testb101");
                 break;
             case 2:
 
@@ -125,6 +125,23 @@ public class PlayerController : MonoBehaviour
 
     }
 
+
+    public void SetBtnEnable(bool bActive)
+    {
+        if (bActive)
+            UiBtnObj.SetActive(true);
+        else
+            UiBtnObj.SetActive(false);
+    }
+
+    public void SelectBtn()
+    {
+        SelectController.SelectBtn();
+    }
+    public void CancleBtn()
+    {
+        SelectController.CancelBtn();
+    }
 
 
 }
