@@ -6,7 +6,7 @@ using UnityEngine;
 public class Talk
 {
 	public int _stage;
-	public int _index;
+	public int _type;
 
 	public string _name;
 	public string _content;

@@ -9,12 +9,15 @@ public class TalkManager : MonoBehaviour
 
 	public int talkType = -1;
 
-	public int talkIndex;
+	public int talkIndex = -1;
 
 	public string talk;
 	public string[] talks;
 
 	public List<Talk> listTalk;
+	
+	public int currentType = -1;
+	public int currentStage = 1;
 
 	void Awake()
 	{
@@ -36,7 +39,7 @@ public class TalkManager : MonoBehaviour
 			
 			int pos;
 			int stage;
-			int index;
+			int type;
 
 			string name;
 			string content;
@@ -46,7 +49,7 @@ public class TalkManager : MonoBehaviour
 			talks[i] = talks[i].Substring(pos + 1, talks[i].Length - pos - 1);
 
 			pos = talks[i].IndexOf(',');
-			index = int.Parse(talks[i].Substring(0, pos));
+			type = int.Parse(talks[i].Substring(0, pos));
 			talks[i] = talks[i].Substring(pos + 1, talks[i].Length - pos - 1);
 
 			pos = talks[i].IndexOf(',');
@@ -55,13 +58,30 @@ public class TalkManager : MonoBehaviour
 			
 			content = talks[i].Substring(0, talks[i].Length).Replace("\\n", string.Format("\n"));
 
-			listTalk.Add( new Talk { _stage = stage, _index = index, _name = name, _content = content });
+			listTalk.Add( new Talk { _stage = stage, _type = type, _name = name, _content = content });
 		}
 	}
 	
 	// public Talk GetTalk(int stage)
 	// {
-	// 	return listTalk[listTalk[stage].];
+	// 	if(listTalk[stage]._type == 0)
+	// 		return listTalk[talkIndex++];
+	// 	else if(talkIndex == -1)
+	// 	{
+	// 		int rand = Random.Range(1, 3);
+
+	// 		int cnt = 0;
+	// 		while(true)
+	// 		{
+	// 			if(listTalk[talkIndex]._type == rand)
+	// 			{
+	// 				currentType = tal
+	// 			}
+
+	// 			cnt++;
+	// 		}
+	// 		return listTalk[talkIndex++];
+	// 	}
 	// }
 
 	public Talk GetNextTalk()
