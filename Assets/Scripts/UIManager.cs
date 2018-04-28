@@ -5,19 +5,110 @@ using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
+	public static UIManager Instance;
+
 	public Text textName;
 	public Text textContent;
 
+	public Image panelStage;
+	public Text textStage;
+
+	public GameObject buttons;
+
+	void Awake()
+	{
+		if(UIManager.Instance == null)
+			UIManager.Instance = this;
+		else
+			Destroy(this.gameObject);
+	}
+
 	void Start ()
 	{
-		//SetNextTalk();
+		StartCoroutine(Fade());
+	}
+	
+	void Update()
+	{
+		if(Input.GetKeyDown(KeyCode.A))
+			SetSuccessTalk();
+		if(Input.GetKeyDown(KeyCode.D))
+			SetFailedTalk();
+	}
+
+	IEnumerator Fade()
+	{
+		panelStage.gameObject.SetActive(true);
+
+		if(TalkManager.Instance.talkStage == 0)
+			textStage.text = "프롤로그";
+		else
+			textStage.text = "챕터 " + TalkManager.Instance.talkStage;
+
+		for(int i=0; i<100; i++)
+		{
+			panelStage.color = new Color(0, 0, 0, panelStage.color.a + 0.01f);
+			yield return new WaitForSeconds(0.01f);
+		}
+
+		yield return new WaitForSeconds(1f);		
+
+		for(int i=0; i<100; i++)
+		{
+			textStage.color = new Color(1, 1, 1, textStage.color.a + 0.01f);
+			yield return new WaitForSeconds(0.01f);
+		}
+
+		yield return new WaitForSeconds(1f);
+		
+		for(int i=0; i<100; i++)
+		{
+			textStage.color = new Color(1, 1, 1, textStage.color.a - 0.01f);
+			yield return new WaitForSeconds(0.01f);
+		}
+
+		yield return new WaitForSeconds(1f);
+
+		for(int i=0; i<100; i++)
+		{
+			panelStage.color = new Color(1, 1, 1, panelStage.color.a - 0.01f);
+			yield return new WaitForSeconds(0.01f);
+		}
+
+		panelStage.gameObject.SetActive(false);
+
+		SetNextTalk();
+	}
+
+	public void SetSuccessTalk()
+	{
+		Talk talk = TalkManager.Instance.GetSuccess();
+
+		textName.text = talk._name;
+		textContent.text = talk._content;
+	}
+
+	public void SetFailedTalk()
+	{
+		Talk talk = TalkManager.Instance.GetFailed();
+
+		textName.text = talk._name;
+		textContent.text = talk._content;
 	}
 
 	public void SetNextTalk()
 	{
-		Talk talk = TalkManager.Instance.GetNextTalk();
+		Talk talk = TalkManager.Instance.GetTalk();
 
-		textName.text = talk._name;
-		textContent.text = talk._content;
+		if(talk._name == "END")
+		{
+			TalkManager.Instance.talkStage ++;
+			StartCoroutine(Fade());
+		}
+		else
+		{
+			textName.text = talk._name;
+			textContent.text = talk._content;
+		}
 	}
 }

@@ -7,17 +7,16 @@ public class TalkManager : MonoBehaviour
 {
 	public static TalkManager Instance;
 
-	public int talkType = -1;
+	public int talkStage = 1;
 
-	public int talkIndex = -1;
+	public int talkIndex = 0;
 
 	public string talk;
 	public string[] talks;
 
 	public List<Talk> listTalk;
-	
-	public int currentType = -1;
-	public int currentStage = 1;
+
+	public List<Talk>[] listTalks = new List<Talk>[100];
 
 	void Awake()
 	{
@@ -39,7 +38,6 @@ public class TalkManager : MonoBehaviour
 			
 			int pos;
 			int stage;
-			int type;
 
 			string name;
 			string content;
@@ -49,40 +47,33 @@ public class TalkManager : MonoBehaviour
 			talks[i] = talks[i].Substring(pos + 1, talks[i].Length - pos - 1);
 
 			pos = talks[i].IndexOf(',');
-			type = int.Parse(talks[i].Substring(0, pos));
-			talks[i] = talks[i].Substring(pos + 1, talks[i].Length - pos - 1);
-
-			pos = talks[i].IndexOf(',');
 			name = talks[i].Substring(0, pos);
 			talks[i] = talks[i].Substring(pos + 1, talks[i].Length - pos - 1);
 			
 			content = talks[i].Substring(0, talks[i].Length).Replace("\\n", string.Format("\n"));
 
-			listTalk.Add( new Talk { _stage = stage, _type = type, _name = name, _content = content });
+			listTalk.Add( new Talk { _stage = stage, _name = name, _content = content });
+
+			listTalks[i] = new List<Talk>();
+			listTalks[i].Add( new Talk { _stage = stage, _name = name, _content = content });
 		}
+
+		UIManager.Instance.SetNextTalk();
 	}
 	
-	// public Talk GetTalk(int stage)
-	// {
-	// 	if(listTalk[stage]._type == 0)
-	// 		return listTalk[talkIndex++];
-	// 	else if(talkIndex == -1)
-	// 	{
-	// 		int rand = Random.Range(1, 3);
+	public Talk GetTalk()
+	{
+		Debug.LogError("CURRENT : " + listTalk.FindIndex((Talk talk) => talk._stage == talkStage) + talkIndex + " / LAST : " + (listTalk.FindLastIndex((Talk talk) => talk._stage == talkStage) + 1));
+		if(listTalk.FindIndex((Talk talk) => talk._stage == talkStage) + talkIndex == (listTalk.FindLastIndex((Talk talk) => talk._stage == talkStage) + 1))
+		{
+			Talk talk;
+			talk = new Talk{ _name = "END", _content = "END" };
 
-	// 		int cnt = 0;
-	// 		while(true)
-	// 		{
-	// 			if(listTalk[talkIndex]._type == rand)
-	// 			{
-	// 				currentType = tal
-	// 			}
+			return talk;
+		}
 
-	// 			cnt++;
-	// 		}
-	// 		return listTalk[talkIndex++];
-	// 	}
-	// }
+		return listTalk[listTalk.FindIndex((Talk talk) => talk._stage == talkStage) + talkIndex++];
+	}
 
 	public Talk GetNextTalk()
 	{
@@ -90,5 +81,21 @@ public class TalkManager : MonoBehaviour
 			talkIndex ++;
 
 		return listTalk[talkIndex - 1];
+	}
+
+	public Talk GetSuccess()
+	{
+		Talk talk;
+		talk = new Talk{ _name = "할머니", _content = "헤에에에" + string.Format("\n") + "기억해 주고있었네에....?"};
+
+		return talk;
+	}
+
+	public Talk GetFailed()
+	{
+		Talk talk;
+		talk = new Talk{ _name = "할머니", _content = "동작 그만, 내가 치매 걸렸다고 밑장 빼기냐" + string.Format("\n") + "내가 빙다리 핫바지로 보이더냐"};
+
+		return talk;
 	}
 }
