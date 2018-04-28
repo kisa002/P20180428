@@ -14,6 +14,7 @@ public class UIManager : MonoBehaviour
 	public Text textStage;
 
 	public GameObject buttons;
+	public Image imageProlog;
 
 	bool isTalk = false;
 
@@ -28,6 +29,7 @@ public class UIManager : MonoBehaviour
 	void Start ()
 	{
 		StartCoroutine(Fade());
+		//StartCoroutine(PlayProlog());
 	}
 	
 	void Update()
@@ -40,45 +42,57 @@ public class UIManager : MonoBehaviour
 
 	IEnumerator Fade()
 	{
-		panelStage.gameObject.SetActive(true);
-
-		if(TalkManager.Instance.talkStage == 1)
-			textStage.text = "프롤로그";
-		else
+		if(TalkManager.Instance.talkStage == 2) // 2가 가장 스무스 ㅇㅈ?
+			StartCoroutine(PlayProlog());
+		
+		if(TalkManager.Instance.talkStage != 1)
+		{
+			panelStage.gameObject.SetActive(true);
 			textStage.text = "챕터 " + (TalkManager.Instance.talkStage - 1);
 
-		for(int i=0; i<100; i++)
-		{
-			panelStage.color = new Color(0, 0, 0, panelStage.color.a + 0.01f);
-			yield return new WaitForSeconds(0.01f);
+			for(int i=0; i<50; i++)
+			{
+				panelStage.color = new Color(0, 0, 0, panelStage.color.a + 0.02f);
+				yield return new WaitForSeconds(0.01f);
+			}
+
+			if(TalkManager.Instance.talkStage != 1)
+				SetNextTalk();
+			
+			yield return new WaitForSeconds(.5f);
+
+			for(int i=0; i<50; i++)
+			{
+				textStage.color = new Color(1, 1, 1, textStage.color.a + 0.02f);
+				yield return new WaitForSeconds(0.01f);
+			}
+
+			yield return new WaitForSeconds(.5f);
+			
+			for(int i=0; i<50; i++)
+			{
+				textStage.color = new Color(1, 1, 1, textStage.color.a - 0.02f);
+				yield return new WaitForSeconds(0.01f);
+			}
+
+			yield return new WaitForSeconds(.5f);
+
+			for(int i=0; i<50; i++)
+			{
+				panelStage.color = new Color(0, 0, 0, panelStage.color.a - 0.02f);
+				yield return new WaitForSeconds(0.01f);
+			}
+
+			yield return new WaitForSeconds(1f);		
+
+			panelStage.gameObject.SetActive(false);
+
+			yield return new WaitForSeconds(.5f);
 		}
-
-		SetNextTalk();		
-		yield return new WaitForSeconds(1f);		
-
-		for(int i=0; i<100; i++)
+		else
 		{
-			textStage.color = new Color(1, 1, 1, textStage.color.a + 0.01f);
-			yield return new WaitForSeconds(0.01f);
+			SetNextTalk();			
 		}
-
-		yield return new WaitForSeconds(1f);
-		
-		for(int i=0; i<100; i++)
-		{
-			textStage.color = new Color(1, 1, 1, textStage.color.a - 0.01f);
-			yield return new WaitForSeconds(0.01f);
-		}
-
-		yield return new WaitForSeconds(1f);
-
-		for(int i=0; i<100; i++)
-		{
-			panelStage.color = new Color(1, 1, 1, panelStage.color.a - 0.01f);
-			yield return new WaitForSeconds(0.01f);
-		}
-		
-		panelStage.gameObject.SetActive(false);
 	}
 
 	public void SetSuccessTalk()
@@ -113,5 +127,28 @@ public class UIManager : MonoBehaviour
 			textName.text = talk._name;
 			textContent.text = talk._content;
 		}
+	}
+
+	IEnumerator PlayProlog()
+	{
+		imageProlog.gameObject.SetActive(true);
+
+		for(int i=1; i<13; i++)
+		{
+			imageProlog.sprite = Resources.Load<Sprite>("Sprites/Prolog/" + i);
+			yield return new WaitForSeconds(.2f);
+		}
+
+		yield return new WaitForSeconds(.5f);
+
+		for(int i=0; i<50; i++)
+		{
+			imageProlog.color = new Color(1, 1, 1, imageProlog.color.a - 0.02f);
+			yield return new WaitForSeconds(0.01f);
+		}
+
+		imageProlog.gameObject.SetActive(false);
+		
+		SetNextTalk();		
 	}
 }
