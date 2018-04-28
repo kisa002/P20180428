@@ -8,6 +8,7 @@ public class PictureController : MonoBehaviour
 	public int type = -1;
     public Vector3 PicturePos;
     public Quaternion PictureRot;
+    public Vector3 PictureScale;
 
     private Vector3 SelectedPos;
     private Quaternion SelectedRot;
@@ -20,10 +21,10 @@ public class PictureController : MonoBehaviour
 
     private void Awake()
     {
-        SelectedPos = new Vector3(35f, 9.9f,4.5f);
+        SelectedPos = new Vector3(35f, 20f,3.3f);
         SelectedRot = new Quaternion (90f, 0f, 0f, 1f);
         SelectedRot.eulerAngles = new Vector3(90f, 0f, 0f);
-        SelectedScale = new Vector3(4.3f, 4.3f, 1f);
+        SelectedScale = new Vector3(3.8f, 3.8f, 1f);
 
         Q.eulerAngles = new Vector3(90f, 0f, 0f);
     }
@@ -48,6 +49,7 @@ public class PictureController : MonoBehaviour
             return;
         PicturePos = transform.localPosition;
         PictureRot = transform.localRotation;
+        PictureScale = transform.localScale;
         PlayerController.instance.SelectController=this;
         bZoomming = true;
         StartCoroutine(ZoomIn());
@@ -112,7 +114,7 @@ public class PictureController : MonoBehaviour
             fTIme += Time.deltaTime / 1f;
             transform.localPosition = Vector3.Lerp(transform.localPosition, PicturePos, fTIme);
             transform.rotation = Quaternion.Lerp(transform.rotation, PictureRot, fTIme);
-            transform.localScale = Vector3.Lerp(transform.localScale, V, fTIme);
+            transform.localScale = Vector3.Lerp(transform.localScale, PictureScale, fTIme);
             if (Vector3.Distance(transform.localPosition, PicturePos) < 1f)
             {
                 bZoomming = false;
@@ -121,7 +123,7 @@ public class PictureController : MonoBehaviour
         }
         transform.localPosition = PicturePos;
         transform.rotation = PictureRot;
-        transform.localScale = V;
+        transform.localScale = PictureScale;
         PlayerController.instance.bPictureSelected = false;
         bSelected = true;
         Debug.Log("취소 끝");
@@ -170,12 +172,14 @@ public class PictureController : MonoBehaviour
         {
             bSelected = false;
             bZoomming = true;
+            UIManager.Instance.SetSuccessTalk();        
             StartCoroutine(SelectPicture());
         }
         else
         {
             bSelected = false;
             bZoomming = true;
+            UIManager.Instance.SetFailedTalk();
             StartCoroutine(ZoomOut());
         }
     }

@@ -16,7 +16,9 @@ public class UIManager : MonoBehaviour
 	public GameObject buttons;
 	public Image imageProlog;
 
-	bool isTalk = false;
+	public bool isClear = false;
+
+	//bool isTalk = false;
 
 	void Awake()
 	{
@@ -56,6 +58,13 @@ public class UIManager : MonoBehaviour
 				yield return new WaitForSeconds(0.01f);
 			}
 
+			if(isClear)
+			{
+				PlayerController.instance.EndChapter();
+				PlayerController.instance.StartChapter(TalkManager.Instance.talkStage - 1);
+				isClear = false;
+			}
+
 			if(TalkManager.Instance.talkStage != 1)
 				SetNextTalk();
 			
@@ -83,8 +92,7 @@ public class UIManager : MonoBehaviour
 				yield return new WaitForSeconds(0.01f);
 			}
 
-			yield return new WaitForSeconds(1f);		
-
+			yield return new WaitForSeconds(.5f);
 			panelStage.gameObject.SetActive(false);
 
 			yield return new WaitForSeconds(.5f);
@@ -98,6 +106,8 @@ public class UIManager : MonoBehaviour
 	public void SetSuccessTalk()
 	{
 		Talk talk = TalkManager.Instance.GetSuccess();
+
+		isClear = true;
 
 		textName.text = talk._name;
 		textContent.text = talk._content;
@@ -149,6 +159,7 @@ public class UIManager : MonoBehaviour
 
 		imageProlog.gameObject.SetActive(false);
 		
-		SetNextTalk();		
+		SetNextTalk();
+		PlayerController.instance.StartChapter(1);
 	}
 }

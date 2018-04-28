@@ -12,6 +12,16 @@ public class PlayerController : MonoBehaviour
     public Transform[] StartPos;
 
     public bool bPictureSelected;
+
+    public string[] sChapter1 = new string[] { "testb001", "testb001", "testb001", "testb001", "testb001", "testb001", "testb001", "testb001", "testb001", "testb001", "", "", "", "", "", "", "" };
+    public string[] sChapter2 = new string[] { "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "" };
+    public string[] sChapter3 = new string[] { "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "" };
+    public string[] sChapter4 = new string[] { "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "" };
+
+
+
+
+
     //public string sPictureName;
     private void Awake()
     {
@@ -20,10 +30,11 @@ public class PlayerController : MonoBehaviour
         StartCoroutine(Init());
 
 
-        Obj = new PictureController[10];
-        for (int i = 0; i < 10; i++)
+        Obj = new PictureController[8];
+        for (int i = 0; i < 8; i++)
         {
-            Obj[i] = Instantiate(PictureObj, transform).GetComponent< PictureController>();
+            Obj[i] = Instantiate(PictureObj, transform).GetComponent<PictureController>();
+            Obj[i].gameObject.SetActive(false);
         }
         ////스케일 로테이션 세팅 추가
         //GameObject obj = Instantiate(PictureObj);
@@ -39,50 +50,107 @@ public class PlayerController : MonoBehaviour
         ////obj2.transform.GetComponent<PictureController>().SetPictureSize(false);
         //obj2.transform.GetComponent<PictureController>().FrontSprite.sprite = GetSprite("testf101");
         //obj2.transform.GetComponent<PictureController>().BackSprite.sprite = GetSprite("testb101");
-        StartChapter(1);
+
+        //StartChapter(1);
 
     }
-    PictureController[]Obj;
+    PictureController[] Obj;
+
+
+    //StartPos
+    void reshuffle()
+    {
+        // Knuth shuffle algorithm :: courtesy of Wikipedia :)
+        for (int t = 0; t < StartPos.Length; t++)
+        {
+            Transform temp = StartPos[t];
+            int r = Random.Range(t, StartPos.Length);
+            StartPos[t] = StartPos[r];
+            StartPos[r] = temp;
+        }
+    }
 
     public string sSelectName;
     public void StartChapter(int nChapter)
     {
+        reshuffle();
         switch (nChapter)
         {
             case 1:
+                sSelectName = "testb001";
+                for (int i = 0; i < 8; i++)
+                {
+
+                    Obj[i].transform.position = StartPos[i].position;
+                    Obj[i].transform.localScale = StartPos[i].localScale;
+                    Obj[i].transform.rotation = StartPos[i].rotation;
+                    //Obj[i].transform.GetComponent<PictureController>().SetPictureSize(false);
+                    Obj[i].transform.GetComponent<PictureController>().FrontSprite.sprite = GetSprite(sChapter1[i * 2]);
+                    Obj[i].transform.GetComponent<PictureController>().BackSprite.sprite = GetSprite(sChapter1[(i * 2) + 1]);
+                    Obj[i].gameObject.SetActive(true);
+                }
+
+                //Obj[7].transform.position = StartPos[7].position;
+                //Obj[7].transform.localScale = StartPos[7].localScale;
+                //Obj[7].transform.rotation = StartPos[7].rotation;
+                ////Obj[i].transform.GetComponent<PictureController>().SetPictureSize(false);
+                //Obj[7].transform.GetComponent<PictureController>().FrontSprite.sprite = GetSprite("testf101");
+                //Obj[7].transform.GetComponent<PictureController>().BackSprite.sprite = GetSprite("testb101");
+
+                break;
+            case 2:
                 sSelectName = "testf101";
                 for (int i = 0; i < 8; i++)
                 {
 
                     Obj[i].transform.position = StartPos[i].position;
-                    Obj[i].transform.localScale = new Vector3(1f, 1f, 1f);
+                    Obj[i].transform.localScale = StartPos[i].localScale;
                     Obj[i].transform.rotation = StartPos[i].rotation;
                     //Obj[i].transform.GetComponent<PictureController>().SetPictureSize(false);
-                    Obj[i].transform.GetComponent<PictureController>().FrontSprite.sprite = GetSprite("testf001");
-                    Obj[i].transform.GetComponent<PictureController>().BackSprite.sprite = GetSprite("testb001");
-
+                    Obj[i].transform.GetComponent<PictureController>().FrontSprite.sprite = GetSprite(sChapter2[i * 2]);
+                    Obj[i].transform.GetComponent<PictureController>().BackSprite.sprite = GetSprite(sChapter2[(i * 2) + 1]);
+                    Obj[i].gameObject.SetActive(true);
                 }
-
-                Obj[7].transform.position = StartPos[7].position;
-                Obj[7].transform.localScale = new Vector3(1f, 1f, 1f);
-                Obj[7].transform.rotation = StartPos[7].rotation;
-                //Obj[i].transform.GetComponent<PictureController>().SetPictureSize(false);
-                Obj[7].transform.GetComponent<PictureController>().FrontSprite.sprite = GetSprite("testf101");
-                Obj[7].transform.GetComponent<PictureController>().BackSprite.sprite = GetSprite("testb101");
-                break;
-            case 2:
-
                 break;
             case 3:
+                sSelectName = "testf101";
+                for (int i = 0; i < 8; i++)
+                {
 
+                    Obj[i].transform.position = StartPos[i].position;
+                    Obj[i].transform.localScale = StartPos[i].localScale;
+                    Obj[i].transform.rotation = StartPos[i].rotation;
+                    //Obj[i].transform.GetComponent<PictureController>().SetPictureSize(false);
+                    Obj[i].transform.GetComponent<PictureController>().FrontSprite.sprite = GetSprite(sChapter3[i * 2]);
+                    Obj[i].transform.GetComponent<PictureController>().BackSprite.sprite = GetSprite(sChapter3[(i * 2) + 1]);
+                    Obj[i].gameObject.SetActive(true);
+                }
                 break;
             case 4:
+                sSelectName = "testf101";
+                for (int i = 0; i < 8; i++)
+                {
 
+                    Obj[i].transform.position = StartPos[i].position;
+                    Obj[i].transform.localScale = StartPos[i].localScale;
+                    Obj[i].transform.rotation = StartPos[i].rotation;
+                    //Obj[i].transform.GetComponent<PictureController>().SetPictureSize(false);
+                    Obj[i].transform.GetComponent<PictureController>().FrontSprite.sprite = GetSprite(sChapter4[i * 2]);
+                    Obj[i].transform.GetComponent<PictureController>().BackSprite.sprite = GetSprite(sChapter4[(i * 2) + 1]);
+                    Obj[i].gameObject.SetActive(true);
+                }
                 break;
             default:
                 break;
         }
 
+    }
+    public void EndChapter()
+    {
+        for (int i = 0; i < 8; i++)
+        {
+            Obj[i].gameObject.SetActive(false);
+        }
     }
 
 
@@ -105,7 +173,8 @@ public class PlayerController : MonoBehaviour
             DcSprite.Add(t1.name, t1);
         }
 
-  
+
+
         yield return null;
     }
     Sprite GetSprite(string SpriteName)
@@ -118,7 +187,7 @@ public class PlayerController : MonoBehaviour
         else
         {
             Debug.Log("이미지가 없습니다");
-            return DcSprite["b000"];
+            return DcSprite["testb001"];
         }
 
         //return null;
